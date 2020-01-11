@@ -25,10 +25,12 @@ namespace apytuu_engine_math{
 		bool operator!=(const Mat<T,M,N> &m) const;
 		inline T* ptr(int r, int c);
 		inline const T* constptr(int r, int c) const;
+		inline const T* getBuf();
 		Mat<T,N,M> transposed() const;
 		static const int S = M*N;
 		static const int NBYTES = S*sizeof(T);
 	private:
+		// The data is stored in row-major order
 		T buf[M*N];
 	};
 
@@ -42,6 +44,11 @@ namespace apytuu_engine_math{
 		for(int i=0;i<S;i++){
 			buf[i] = v;
 		}
+	}
+
+	template<class T, int M, int N>
+	const T* Mat<T,M,N>::getBuf(){
+		return buf;
 	}
 
 	template<class T, int M, int N>

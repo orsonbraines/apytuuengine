@@ -30,6 +30,12 @@ namespace apytuu_engine_math{
 		T buf[N];
 	};
 
+	template<class T, int N> Vec<T,N> operator*(T a, const Vec<T,N> &v);
+	template<class T, int N> Vec<T,N> operator/(const Vec<T,N> &v, T a);
+	template<class T, int N> ostream& operator<<(ostream &o, const Vec<T,N> &v);
+	template<class T> Vec<T,3> cross(const Vec<T,3> &v0, const Vec<T,3> &v1);
+
+
 	template<class T, int N>
 	Vec<T,N> operator*(T a, const Vec<T,N> &v){
 		Vec<T,N> res = v;
@@ -51,6 +57,15 @@ namespace apytuu_engine_math{
 		}
 		o << endl;
 		return o;
+	}
+
+	template<class T>
+	Vec<T,3> cross(const Vec<T,3> &v0, const Vec<T,3> &v1){
+		Vec<T,3> res;
+		res.at(0) = v0.get(1) * v1.get(2) - v0.get(2) * v1.get(1);
+		res.at(1) = v0.get(2) * v1.get(0) - v0.get(0) * v1.get(2);
+		res.at(2) = v0.get(0) * v1.get(1) - v0.get(1) * v1.get(0);
+		return res;
 	}
 
 	template<class T, int N>
@@ -116,15 +131,9 @@ namespace apytuu_engine_math{
 
 	template<class T, int N>
 	T Vec<T,N>::operator*(const Vec<T,N> &v) const{
-		T res;
-		if(N > 0){
-			res = buf[0] * v.buf[0];
-			for(int i=1; i<N; i++){
-				res += buf[i] * v.buf[i];
-			}
-		}
-		else{
-			memset((void*)&res,0,sizeof(T));
+		T res = 0;
+		for(int i=0; i<N; i++){
+			res += buf[i] * v.buf[i];
 		}
 		return res;
 	}
@@ -142,15 +151,6 @@ namespace apytuu_engine_math{
 	template<class T, int N>
 	bool Vec<T,N>::operator!=(const Vec<T,N> &v) const{
 		return memcmp((const void*)buf, (const void*)v.buf, NBYTES) != 0;
-	}
-
-	template<class T>
-	Vec<double,3> cross(const Vec<T,3> &v0, const Vec<T,3> &v1){
-		Vec<T,3> res;
-		res.at(0) = v0.get(1) * v1.get(2) - v0.get(2) * v1.get(1);
-		res.at(1) = v0.get(2) * v1.get(0) - v0.get(0) * v1.get(2);
-		res.at(2) = v0.get(0) * v1.get(1) - v0.get(1) * v1.get(0);
-		return res;
 	}
 }
 #endif
